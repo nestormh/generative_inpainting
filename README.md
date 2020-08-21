@@ -1,8 +1,22 @@
 # Generative Image Inpainting
 
 ![version](https://img.shields.io/badge/version-v2.0.0-green.svg?style=plastic)
-![pytorch](https://img.shields.io/badge/tensorflow-v1.7.0-green.svg?style=plastic)
+![pytorch](https://img.shields.io/badge/tensorflow-v2.2.0-green.svg?style=plastic)
 ![license](https://img.shields.io/badge/license-CC_BY--NC-green.svg?style=plastic)
+
+The purpose of this fork is being able to apply inference in the provided models using tensorflow 2.0.
+
+Please have in mind that at the moment, training has not been upgraded, just inference.
+
+Changes:
+- Some functions have been renamed / reconfigured for the newer tensorflow version.
+- Checkpoints provided were incompatible with the actual code, so some variable names had to be changed.
+- neuralgym repository had to be included in this one to provide the same funcionality. I avoided created a fork since 
+  just some parts of the code were upgraded and could be confusing. Original code can be checked here: 
+  [neuralgym](https://github.com/JiahuiYu/neuralgym).
+- Tested with Tensorflow 2.2.0.  
+
+# Former documentation
 
 An open source framework for generative image inpainting task, with the support of [Contextual Attention](https://arxiv.org/abs/1801.07892) (CVPR 2018) and [Gated Convolution](https://arxiv.org/abs/1806.03589) (ICCV 2019 Oral).
 

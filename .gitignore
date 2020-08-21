@@ -1,3 +1,8 @@
 model_logs
 logs
 data
+*__pycache__*
+examples/places2/.directory
+examples/places2/bike_resized.jpg
+examples/places2/bike_segment_map.jpg
+

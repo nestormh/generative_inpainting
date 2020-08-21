@@ -3,7 +3,7 @@ import argparse
 import cv2
 import numpy as np
 import tensorflow as tf
-import neuralgym as ng
+import neuralgym.neuralgym as ng
 
 from inpaint_model import InpaintCAModel
 
@@ -17,7 +17,6 @@ parser.add_argument('--output', default='output.png', type=str,
                     help='Where to write output.')
 parser.add_argument('--checkpoint_dir', default='', type=str,
                     help='The directory of tensorflow checkpoint.')
-
 
 if __name__ == "__main__":
     FLAGS = ng.Config('inpaint.yml')
@@ -41,23 +40,34 @@ if __name__ == "__main__":
     mask = np.expand_dims(mask, 0)
     input_image = np.concatenate([image, mask], axis=2)
 
-    sess_config = tf.ConfigProto()
+    sess_config = tf.compat.v1.ConfigProto()
     sess_config.gpu_options.allow_growth = True
-    with tf.Session(config=sess_config) as sess:
+    with tf.compat.v1.Session(config=sess_config) as sess:
         input_image = tf.constant(input_image, dtype=tf.float32)
         output = model.build_server_graph(FLAGS, input_image)
         output = (output + 1.) * 127.5
         output = tf.reverse(output, [-1])
         output = tf.saturate_cast(output, tf.uint8)
         # load pretrained model
-        vars_list = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)
+        # sess.run(tf.compat.v1.global_variables_initializer())
+        vars_list = tf.compat.v1.get_collection(tf.compat.v1.GraphKeys.GLOBAL_VARIABLES)
         assign_ops = []
         for var in vars_list:
             vname = var.name
+
+            # NOTE: Variables are not coincident with the provided model, so we will need to rename them by brute force
+            if "upsample_conv" in vname:
+                vname = "inpaint_net/" + vname.split("/")[0][:-5] + "/" + vname
+            else:
+                vname = "inpaint_net/" + vname
+
             from_name = vname
-            var_value = tf.contrib.framework.load_variable(args.checkpoint_dir, from_name)
-            assign_ops.append(tf.assign(var, var_value))
+
+            var_value = tf.compat.v1.train.load_variable(args.checkpoint_dir, from_name)
+
+            assign_ops.append(tf.compat.v1.assign(var, var_value))
         sess.run(assign_ops)
+
         print('Model loaded.')
         result = sess.run(output)
         cv2.imwrite(args.output, result[0][:, :, ::-1])
