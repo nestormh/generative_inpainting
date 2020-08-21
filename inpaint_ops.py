@@ -4,7 +4,6 @@ import math
 import cv2
 import numpy as np
 import tensorflow as tf
-# from tensorflow.contrib.framework.python.ops import add_arg_scope
 from PIL import Image, ImageDraw
 
 from neuralgym.neuralgym.ops.layers import resize
@@ -18,7 +17,6 @@ logger = logging.getLogger()
 np.random.seed(2018)
 
 
-# @add_arg_scope
 def gen_conv(x, cnum, ksize, stride=1, rate=1, name='conv',
              padding='SAME', activation=tf.nn.elu, training=True):
     """Define conv for generator.
@@ -56,7 +54,6 @@ def gen_conv(x, cnum, ksize, stride=1, rate=1, name='conv',
     return x
 
 
-# @add_arg_scope
 def gen_deconv(x, cnum, name='upsample', padding='SAME', training=True):
     """Define deconv for generator.
     The deconv is defined to be a x2 resize_nearest_neighbor operation with
@@ -72,7 +69,6 @@ def gen_deconv(x, cnum, name='upsample', padding='SAME', training=True):
         tf.Tensor: output
 
     """
-    # with tf.variable_scope(name):
     x = resize(x, func=tf.compat.v1.image.resize_nearest_neighbor)
     x = gen_conv(
         x, cnum, 3, 1, name=name+'_conv', padding=padding,
@@ -81,7 +77,6 @@ def gen_deconv(x, cnum, name='upsample', padding='SAME', training=True):
     return x
 
 
-# @add_arg_scope
 def dis_conv(x, cnum, ksize=5, stride=2, name='conv', training=True):
     """Define conv for discriminator.
     Activation is set to leaky_relu.
@@ -499,7 +494,6 @@ def flow_to_image(flow):
 def flow_to_image_tf(flow, name='flow_to_image'):
     """Tensorflow ops for computing flow to image.
     """
-    # with tf.variable_scope(name), tf.device('/cpu:0'):
     img = tf.compat.v1.py_func(flow_to_image, [flow], tf.float32, stateful=False)
     img.set_shape(flow.get_shape().as_list()[0:-1]+[3])
     img = img / 127.5 - 1.

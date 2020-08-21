@@ -90,7 +90,6 @@ def moving_average_var(x, decay=0.99, initial_value=0.,
 
 
 def depthwise_conv2d(x, ksize=3, stride=1, decay=0.0, biased=True, relu=False,
-         # activation_fn=None, w_init=tf.contrib.layers.xavier_initializer_conv2d(),
          activation_fn=None, w_init=tf.compat.v1.keras.initializers.glorot_uniform(),
          padding='SAME', name='depthwise_conv2d'):
     """Simple wrapper for convolution layer.

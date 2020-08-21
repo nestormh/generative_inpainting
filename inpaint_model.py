@@ -4,7 +4,6 @@ import logging
 import cv2
 import neuralgym as ng
 import tensorflow as tf
-# from tensorflow.contrib.framework.python.ops import arg_scope
 
 from neuralgym.neuralgym.models import Model
 from neuralgym.neuralgym.ops.summary_ops import scalar_summary, images_summary
@@ -42,10 +41,6 @@ class InpaintCAModel(Model):
 
         # two stage network
         cnum = 48
-        # with tf.compat.v1.variable_scope(name, reuse=reuse), \
-                # arg_scope([gen_conv, gen_deconv],
-                #           training=training, padding=padding):
-            # stage1
         x = gen_conv(x, cnum, 5, 1, name='conv1')
         x = gen_conv(x, 2*cnum, 3, 2, name='conv2_downsample')
         x = gen_conv(x, 2*cnum, 3, 1, name='conv3')
